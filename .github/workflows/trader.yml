@@ -1,1 +1,28 @@
+name: Automated Forex Bot
 
+on:
+  schedule:
+    # Runs automatically every 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Lets you trigger it manually anytime from your phone GitHub app
+
+jobs:
+  trade-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Required Packages
+        run: pip install requests
+
+      - name: Run Trading Script
+        env:
+          OANDA_ACCOUNT_ID: ${{ secrets.OANDA_ACCOUNT_ID }}
+          OANDA_API_KEY: ${{ secrets.OANDA_API_KEY }}
+        run: python main.py
